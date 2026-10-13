@@ -24,7 +24,7 @@ class Plugin {
 	const META_MARKERS  = '_ds_schrankerl_map_markers';
 	const NONCE_ACTION  = 'ds_schrankerl_map_save';
 	const NONCE_NAME    = 'ds_schrankerl_map_nonce';
-	const DEFAULT_WIDTH = 80;
+	const DEFAULT_WIDTH = 40;
 	const MAX_WIDTH     = 2000;
 
 	private static $instance = null;

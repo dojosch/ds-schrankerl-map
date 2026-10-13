@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const settings = window.dsSchrankerlMap || {};
     const i18n = settings.i18n || {};
-    const defaultWidth = parseInt(settings.defaultWidth, 10) || 80;
+    const defaultWidth = parseInt(settings.defaultWidth, 10) || 40;
     const maxWidth = parseInt(settings.maxWidth, 10) || 2000;
 
     const imageIdInput = document.getElementById('ds-schrankerl-map-image-id');
