@@ -205,7 +205,7 @@ class Plugin {
 					'selectLogo'    => __( 'Select Logo', 'ds-schrankerl-map' ),
 					'changeLogo'    => __( 'Change Logo', 'ds-schrankerl-map' ),
 					'noLogo'        => __( 'No logo selected. Markers without a logo are not shown on the website.', 'ds-schrankerl-map' ),
-					'url'           => __( 'Link URL', 'ds-schrankerl-map' ),
+					'url'           => __( 'Link URL (optional)', 'ds-schrankerl-map' ),
 					'width'         => __( 'Width (px)', 'ds-schrankerl-map' ),
 					'delete'        => __( 'Delete', 'ds-schrankerl-map' ),
 					'confirmDelete' => __( 'Delete this marker?', 'ds-schrankerl-map' ),

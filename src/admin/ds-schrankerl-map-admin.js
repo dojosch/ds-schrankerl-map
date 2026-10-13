@@ -128,8 +128,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const urlId = 'ds-schrankerl-map-url-' + marker.id;
             const urlLabel = el('label', '', { for: urlId });
-            urlLabel.textContent = i18n.url || 'Link URL';
-            const urlInput = el('input', 'widefat', { type: 'url', id: urlId, 'data-field': 'url', placeholder: 'https://' });
+            urlLabel.textContent = i18n.url || 'Link URL (optional)';
+            const urlInput = el('input', 'widefat', { type: 'text', inputmode: 'url', id: urlId, 'data-field': 'url', placeholder: 'https://' });
             urlInput.value = marker.url || '';
 
             const widthId = 'ds-schrankerl-map-width-' + marker.id;
