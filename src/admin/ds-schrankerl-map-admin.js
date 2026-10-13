@@ -39,6 +39,12 @@ document.addEventListener('DOMContentLoaded', function () {
         return width > 0 ? Math.min(width, maxWidth) : defaultWidth;
     }
 
+    // 0 means "same as width".
+    function sanitizeMobileWidth(value) {
+        const width = parseInt(value, 10);
+        return width > 0 ? Math.min(width, maxWidth) : 0;
+    }
+
     function sanitizeFit(value) {
         return value === 'contain' ? 'contain' : 'cover';
     }
@@ -62,6 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 logo_url: marker.logo_url || '',
                 url: marker.url || '',
                 width: sanitizeWidth(marker.width),
+                width_mobile: sanitizeMobileWidth(marker.width_mobile),
                 fit: sanitizeFit(marker.fit)
             };
         }));
@@ -146,6 +153,12 @@ document.addEventListener('DOMContentLoaded', function () {
             const widthInput = el('input', 'small-text', { type: 'number', id: widthId, 'data-field': 'width', min: 1, max: maxWidth, step: 1 });
             widthInput.value = sanitizeWidth(marker.width);
 
+            const mobileId = 'ds-schrankerl-map-width-mobile-' + marker.id;
+            const mobileLabel = el('label', '', { for: mobileId });
+            mobileLabel.textContent = i18n.widthMobile || 'Mobile width (px)';
+            const mobileInput = el('input', 'small-text', { type: 'number', id: mobileId, 'data-field': 'width_mobile', min: 1, max: maxWidth, step: 1, placeholder: i18n.sameAsWidth || 'Same as width' });
+            mobileInput.value = sanitizeMobileWidth(marker.width_mobile) || '';
+
             const fitId = 'ds-schrankerl-map-fit-' + marker.id;
             const fitLabel = el('label', '', { for: fitId });
             fitLabel.textContent = i18n.fitCover || 'Cover marker';
@@ -161,7 +174,7 @@ document.addEventListener('DOMContentLoaded', function () {
             fitSwitch.append(fitInput, fitTrack);
 
             const fields = el('div', 'ds-schrankerl-map-admin__fields');
-            fields.append(urlLabel, urlInput, widthLabel, widthInput, fitLabel, fitSwitch);
+            fields.append(urlLabel, urlInput, widthLabel, widthInput, mobileLabel, mobileInput, fitLabel, fitSwitch);
 
             li.append(header, logoRow, fields);
             markerList.appendChild(li);
@@ -189,7 +202,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (e.button !== 0 || e.target !== baseImage) return;
 
         const point = pointFromEvent(e);
-        const marker = { id: generateId(), x: point.x, y: point.y, logo_id: 0, logo_url: '', url: '', width: defaultWidth, fit: 'cover' };
+        const marker = { id: generateId(), x: point.x, y: point.y, logo_id: 0, logo_url: '', url: '', width: defaultWidth, width_mobile: 0, fit: 'cover' };
         markers.push(marker);
         activeId = marker.id;
         render();
@@ -262,6 +275,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (field === 'fit') {
             marker.fit = e.target.checked ? 'cover' : 'contain';
+        } else if (field === 'width_mobile') {
+            marker.width_mobile = sanitizeMobileWidth(e.target.value);
         } else {
             marker[field] = field === 'width' ? sanitizeWidth(e.target.value) : e.target.value.trim();
         }
@@ -280,8 +295,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Normalize the width field once editing is done (e.g. empty → default)
     markerList.addEventListener('change', function (e) {
-        if (e.target.getAttribute('data-field') === 'width') {
+        const field = e.target.getAttribute('data-field');
+        if (field === 'width') {
             e.target.value = sanitizeWidth(e.target.value);
+        } else if (field === 'width_mobile') {
+            e.target.value = sanitizeMobileWidth(e.target.value) || '';
         }
     });
 

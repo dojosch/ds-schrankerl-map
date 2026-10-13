@@ -207,6 +207,8 @@ class Plugin {
 					'noLogo'        => __( 'No logo selected. Markers without a logo are not shown on the website.', 'ds-schrankerl-map' ),
 					'url'           => __( 'Link URL (optional)', 'ds-schrankerl-map' ),
 					'width'         => __( 'Width (px)', 'ds-schrankerl-map' ),
+					'widthMobile'   => __( 'Mobile width (px)', 'ds-schrankerl-map' ),
+					'sameAsWidth'   => __( 'Same as width', 'ds-schrankerl-map' ),
 					'fitCover'      => __( 'Cover marker', 'ds-schrankerl-map' ),
 					'yes'           => __( 'Yes', 'ds-schrankerl-map' ),
 					'no'            => __( 'No', 'ds-schrankerl-map' ),
@@ -279,7 +281,7 @@ class Plugin {
 					[
 						'class'   => 'ds-schrankerl-map__logo' . ( 'contain' === $marker['fit'] ? ' ds-schrankerl-map__logo--contain' : '' ),
 						'alt'     => $name,
-						'sizes'   => $marker['width'] . 'px',
+						'sizes'   => $marker['width_mobile'] ? sprintf( '(max-width: 767px) %dpx, %dpx', $marker['width_mobile'], $marker['width'] ) : $marker['width'] . 'px',
 						'loading' => 'lazy',
 					]
 				);
@@ -288,7 +290,10 @@ class Plugin {
 				}
 
 				// %F is locale-independent, so the decimal separator is always a dot.
-				$style = sprintf( 'left:%.3F%%;top:%.3F%%;width:%dpx;', $marker['x'], $marker['y'], $marker['width'] );
+				$style = sprintf( 'left:%.3F%%;top:%.3F%%;--ds-schrankerl-map-marker-width:%dpx;', $marker['x'], $marker['y'], $marker['width'] );
+				if ( $marker['width_mobile'] ) {
+					$style .= sprintf( '--ds-schrankerl-map-marker-width-mobile:%dpx;', $marker['width_mobile'] );
+				}
 				?>
 				<?php if ( $marker['url'] ) : ?>
 					<a class="ds-schrankerl-map__marker" href="<?php echo esc_url( $marker['url'] ); ?>" target="_blank" rel="noopener" title="<?php echo esc_attr( $name ); ?>" style="<?php echo esc_attr( $style ); ?>"><?php echo $logo; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></a>
@@ -339,15 +344,18 @@ class Plugin {
 			$id      = isset( $marker['id'] ) ? preg_replace( '/[^a-z0-9]/i', '', (string) $marker['id'] ) : '';
 			$logo_id = isset( $marker['logo_id'] ) ? absint( $marker['logo_id'] ) : 0;
 			$width   = isset( $marker['width'] ) ? absint( $marker['width'] ) : 0;
+			$mobile  = isset( $marker['width_mobile'] ) ? absint( $marker['width_mobile'] ) : 0;
 
 			$clean[] = [
-				'id'      => '' !== $id ? $id : wp_generate_password( 9, false ),
-				'x'       => round( min( 100, max( 0, (float) $marker['x'] ) ), 3 ),
-				'y'       => round( min( 100, max( 0, (float) $marker['y'] ) ), 3 ),
-				'logo_id' => $logo_id && wp_attachment_is_image( $logo_id ) ? $logo_id : 0,
-				'url'     => isset( $marker['url'] ) ? esc_url_raw( trim( (string) $marker['url'] ) ) : '',
-				'width'   => $width ? min( $width, self::MAX_WIDTH ) : self::DEFAULT_WIDTH,
-				'fit'     => isset( $marker['fit'] ) && 'contain' === $marker['fit'] ? 'contain' : 'cover',
+				'id'           => '' !== $id ? $id : wp_generate_password( 9, false ),
+				'x'            => round( min( 100, max( 0, (float) $marker['x'] ) ), 3 ),
+				'y'            => round( min( 100, max( 0, (float) $marker['y'] ) ), 3 ),
+				'logo_id'      => $logo_id && wp_attachment_is_image( $logo_id ) ? $logo_id : 0,
+				'url'          => isset( $marker['url'] ) ? esc_url_raw( trim( (string) $marker['url'] ) ) : '',
+				'width'        => $width ? min( $width, self::MAX_WIDTH ) : self::DEFAULT_WIDTH,
+				// 0 means "same as width".
+				'width_mobile' => min( $mobile, self::MAX_WIDTH ),
+				'fit'          => isset( $marker['fit'] ) && 'contain' === $marker['fit'] ? 'contain' : 'cover',
 			];
 		}
 
