@@ -39,6 +39,10 @@ document.addEventListener('DOMContentLoaded', function () {
         return width > 0 ? Math.min(width, maxWidth) : defaultWidth;
     }
 
+    function sanitizeFit(value) {
+        return value === 'contain' ? 'contain' : 'cover';
+    }
+
     function el(tag, className, attrs) {
         const node = document.createElement(tag);
         if (className) node.className = className;
@@ -57,7 +61,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 logo_id: marker.logo_id || 0,
                 logo_url: marker.logo_url || '',
                 url: marker.url || '',
-                width: sanitizeWidth(marker.width)
+                width: sanitizeWidth(marker.width),
+                fit: sanitizeFit(marker.fit)
             };
         }));
     }
@@ -88,6 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (marker.logo_url) {
                 node.classList.add('has-logo');
+                node.classList.toggle('is-contain', sanitizeFit(marker.fit) === 'contain');
                 node.style.width = sanitizeWidth(marker.width) + 'px';
                 node.appendChild(el('img', '', { src: marker.logo_url, alt: '', draggable: 'false' }));
             } else {
@@ -116,7 +122,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const logoRow = el('div', 'ds-schrankerl-map-admin__logo-row');
             if (marker.logo_url) {
-                logoRow.appendChild(el('img', 'ds-schrankerl-map-admin__logo-preview', { src: marker.logo_url, alt: '' }));
+                const preview = el('img', 'ds-schrankerl-map-admin__logo-preview', { src: marker.logo_url, alt: '' });
+                preview.classList.toggle('is-contain', sanitizeFit(marker.fit) === 'contain');
+                logoRow.appendChild(preview);
             } else {
                 const notice = el('p', 'description');
                 notice.textContent = i18n.noLogo || 'No logo selected.';
@@ -138,8 +146,22 @@ document.addEventListener('DOMContentLoaded', function () {
             const widthInput = el('input', 'small-text', { type: 'number', id: widthId, 'data-field': 'width', min: 1, max: maxWidth, step: 1 });
             widthInput.value = sanitizeWidth(marker.width);
 
+            const fitId = 'ds-schrankerl-map-fit-' + marker.id;
+            const fitLabel = el('label', '', { for: fitId });
+            fitLabel.textContent = i18n.fitCover || 'Cover marker';
+            const fitSwitch = el('label', 'ds-schrankerl-map-admin__switch', { for: fitId });
+            const fitInput = el('input', '', { type: 'checkbox', role: 'switch', id: fitId, 'data-field': 'fit' });
+            fitInput.checked = sanitizeFit(marker.fit) === 'cover';
+            const fitTrack = el('span', 'ds-schrankerl-map-admin__switch-track', { 'aria-hidden': 'true' });
+            const fitOn = el('span', 'ds-schrankerl-map-admin__switch-on');
+            fitOn.textContent = i18n.yes || 'Yes';
+            const fitOff = el('span', 'ds-schrankerl-map-admin__switch-off');
+            fitOff.textContent = i18n.no || 'No';
+            fitTrack.append(fitOn, fitOff);
+            fitSwitch.append(fitInput, fitTrack);
+
             const fields = el('div', 'ds-schrankerl-map-admin__fields');
-            fields.append(urlLabel, urlInput, widthLabel, widthInput);
+            fields.append(urlLabel, urlInput, widthLabel, widthInput, fitLabel, fitSwitch);
 
             li.append(header, logoRow, fields);
             markerList.appendChild(li);
@@ -167,7 +189,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (e.button !== 0 || e.target !== baseImage) return;
 
         const point = pointFromEvent(e);
-        const marker = { id: generateId(), x: point.x, y: point.y, logo_id: 0, logo_url: '', url: '', width: defaultWidth };
+        const marker = { id: generateId(), x: point.x, y: point.y, logo_id: 0, logo_url: '', url: '', width: defaultWidth, fit: 'cover' };
         markers.push(marker);
         activeId = marker.id;
         render();
@@ -238,11 +260,20 @@ document.addEventListener('DOMContentLoaded', function () {
         const marker = item && findMarker(item.getAttribute('data-id'));
         if (!field || !marker) return;
 
-        marker[field] = field === 'width' ? sanitizeWidth(e.target.value) : e.target.value.trim();
+        if (field === 'fit') {
+            marker.fit = e.target.checked ? 'cover' : 'contain';
+        } else {
+            marker[field] = field === 'width' ? sanitizeWidth(e.target.value) : e.target.value.trim();
+        }
 
-        if (field === 'width') {
+        if (field === 'width' || field === 'fit') {
             const node = canvas.querySelector('.ds-schrankerl-map-admin__marker[data-id="' + marker.id + '"]');
-            if (node && node.classList.contains('has-logo')) node.style.width = marker.width + 'px';
+            if (node && node.classList.contains('has-logo')) {
+                node.style.width = marker.width + 'px';
+                node.classList.toggle('is-contain', marker.fit === 'contain');
+            }
+            const preview = item.querySelector('.ds-schrankerl-map-admin__logo-preview');
+            if (preview) preview.classList.toggle('is-contain', marker.fit === 'contain');
         }
         updateInput();
     });

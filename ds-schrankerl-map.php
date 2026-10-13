@@ -207,6 +207,9 @@ class Plugin {
 					'noLogo'        => __( 'No logo selected. Markers without a logo are not shown on the website.', 'ds-schrankerl-map' ),
 					'url'           => __( 'Link URL (optional)', 'ds-schrankerl-map' ),
 					'width'         => __( 'Width (px)', 'ds-schrankerl-map' ),
+					'fitCover'      => __( 'Cover marker', 'ds-schrankerl-map' ),
+					'yes'           => __( 'Yes', 'ds-schrankerl-map' ),
+					'no'            => __( 'No', 'ds-schrankerl-map' ),
 					'delete'        => __( 'Delete', 'ds-schrankerl-map' ),
 					'confirmDelete' => __( 'Delete this marker?', 'ds-schrankerl-map' ),
 					'imageFrame'    => __( 'Select Map Image', 'ds-schrankerl-map' ),
@@ -274,7 +277,7 @@ class Plugin {
 					'full',
 					false,
 					[
-						'class'   => 'ds-schrankerl-map__logo',
+						'class'   => 'ds-schrankerl-map__logo' . ( 'contain' === $marker['fit'] ? ' ds-schrankerl-map__logo--contain' : '' ),
 						'alt'     => $name,
 						'sizes'   => $marker['width'] . 'px',
 						'loading' => 'lazy',
@@ -344,6 +347,7 @@ class Plugin {
 				'logo_id' => $logo_id && wp_attachment_is_image( $logo_id ) ? $logo_id : 0,
 				'url'     => isset( $marker['url'] ) ? esc_url_raw( trim( (string) $marker['url'] ) ) : '',
 				'width'   => $width ? min( $width, self::MAX_WIDTH ) : self::DEFAULT_WIDTH,
+				'fit'     => isset( $marker['fit'] ) && 'contain' === $marker['fit'] ? 'contain' : 'cover',
 			];
 		}
 
