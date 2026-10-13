@@ -1,0 +1,36 @@
+.devsolution-click-map {
+    position: relative;
+    max-width: 100%;
+    overflow: hidden;
+    line-height: 0;
+    font-size: 0;
+}
+
+.devsolution-click-map img {
+    width: 100%;
+    display: block;
+    height: auto;
+}
+
+.click-map-poly {
+    cursor: pointer;
+    transition: fill 0.3s ease, stroke-width 0.3s ease, stroke 0.3s ease;
+    vector-effect: non-scaling-stroke;
+    fill: transparent;
+}
+
+/* Hover effects for devices that support hover (desktop) */
+@media (hover: hover) and (pointer: fine) {
+    .click-map-poly:hover {
+        fill: var(--hover-bg, rgba(255, 255, 255, 0.4));
+        stroke-width: 1.5px;
+    }
+}
+
+/* Base styles for mobile or touch - keep absolutely nothing visible */
+@media (hover: none) and (pointer: coarse) {
+    .click-map-poly {
+        fill: transparent !important;
+        stroke: transparent !important;
+    }
+}
