@@ -1,0 +1,134 @@
+.ds-schrankerl-map-admin [hidden] {
+    display: none !important;
+}
+
+.ds-schrankerl-map-admin__shortcode code {
+    user-select: all;
+}
+
+.ds-schrankerl-map-admin__image-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ds-schrankerl-map-admin__canvas {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+    border: 1px solid #ccd0d4;
+    background: #f0f0f1;
+    line-height: 0;
+    cursor: crosshair;
+    user-select: none;
+}
+
+.ds-schrankerl-map-admin__canvas > img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.ds-schrankerl-map-admin__marker {
+    position: absolute;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: 24px;
+    aspect-ratio: 1 / 1;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background: #2271b1;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+    overflow: hidden;
+    transform: translate(-50%, -50%);
+    cursor: grab;
+    touch-action: none;
+}
+
+.ds-schrankerl-map-admin__marker.has-logo {
+    background: #fff;
+}
+
+.ds-schrankerl-map-admin__marker img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+.ds-schrankerl-map-admin__marker.is-active {
+    z-index: 2;
+    outline: 3px solid #d63638;
+    outline-offset: 1px;
+}
+
+.ds-schrankerl-map-admin__marker.is-dragging {
+    cursor: grabbing;
+}
+
+.ds-schrankerl-map-admin__list {
+    margin: 12px 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+}
+
+.ds-schrankerl-map-admin__item {
+    margin: 0;
+    padding: 12px;
+    border: 1px solid #e2e4e7;
+    border-radius: 4px;
+    background: #f9f9f9;
+}
+
+.ds-schrankerl-map-admin__item.is-active {
+    border-color: #d63638;
+    box-shadow: 0 0 0 1px #d63638;
+}
+
+.ds-schrankerl-map-admin__item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e2e4e7;
+}
+
+.ds-schrankerl-map-admin__logo-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.ds-schrankerl-map-admin__logo-row .description {
+    margin: 0;
+    flex: 1;
+}
+
+.ds-schrankerl-map-admin__logo-preview {
+    width: 48px;
+    height: 48px;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    background: #fff;
+    object-fit: contain;
+}
+
+.ds-schrankerl-map-admin__fields {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 8px;
+}
