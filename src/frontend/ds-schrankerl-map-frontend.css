@@ -1,0 +1,383 @@
+.ds-schrankerl-map {
+    position: relative;
+    max-width: 100%;
+    line-height: 0;
+}
+
+.ds-schrankerl-map .ds-schrankerl-map__image {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+}
+
+/* Widths are set inline per marker (px values from the backend). */
+.ds-schrankerl-map .ds-schrankerl-map__marker {
+    position: absolute;
+    z-index: 1;
+    display: block;
+    width: var(--ds-schrankerl-map-marker-width);
+    box-sizing: border-box;
+    aspect-ratio: 1 / 1;
+    border: 2px solid var(--ds-schrankerl-map-logo-border, #38624A);
+    border-radius: 50%;
+    background: var(--ds-schrankerl-map-logo-bg, #FDF4EA);
+    overflow: hidden;
+    text-decoration: none;
+    transform: translate(-50%, -50%);
+    transition: transform 0.2s ease;
+}
+
+.ds-schrankerl-map button.ds-schrankerl-map__marker {
+    margin: 0;
+    padding: 0;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    appearance: none;
+}
+
+.ds-schrankerl-map .ds-schrankerl-map__marker:hover,
+.ds-schrankerl-map a.ds-schrankerl-map__marker:focus-visible,
+.ds-schrankerl-map button.ds-schrankerl-map__marker:focus-visible {
+    z-index: 2;
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+.ds-schrankerl-map a.ds-schrankerl-map__marker:focus-visible,
+.ds-schrankerl-map button.ds-schrankerl-map__marker:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}
+
+.ds-schrankerl-map .ds-schrankerl-map__logo {
+    display: block;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    margin: 0;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.ds-schrankerl-map .ds-schrankerl-map__logo--contain {
+    object-fit: contain;
+}
+
+/* Matches the theme's Tailwind md breakpoint. */
+@media (max-width: 767px) {
+    .ds-schrankerl-map .ds-schrankerl-map__marker {
+        width: var(--ds-schrankerl-map-marker-width-mobile, var(--ds-schrankerl-map-marker-width));
+    }
+}
+
+/*
+ * Popup: colors, fonts and controls follow the theme's popup, slider and button styles.
+ * Mobile opens it as a modal over the page, desktop as a card floating over the map.
+ */
+html:has(.ds-schrankerl-map-popup:modal),
+html:has(.ds-schrankerl-map-popup:modal) body {
+    overflow: hidden;
+}
+
+.ds-schrankerl-map-popup {
+    box-sizing: border-box;
+    padding: 0;
+    border: 0;
+    border-radius: 24px;
+    background: var(--color-background, #FDF4EA);
+    box-shadow: 0 24px 60px rgba(30, 59, 42, 0.25);
+    color: var(--color-primary, #38624A);
+    font-family: var(--font-sans, 'Poppins', 'Arial', sans-serif);
+    font-feature-settings: 'dlig' on;
+    line-height: 1.5;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    /* Still scrollable, but a scrollbar would cut into the rounded corners and narrow the slider. */
+    scrollbar-width: none;
+}
+
+.ds-schrankerl-map-popup::-webkit-scrollbar {
+    display: none;
+}
+
+.ds-schrankerl-map-popup:modal {
+    width: calc(100% - 32px);
+    max-width: 560px;
+    max-height: calc(100% - 32px);
+    margin: auto;
+}
+
+/* Placed next to its marker by the script, via top/left. */
+.ds-schrankerl-map-popup:not(:modal) {
+    position: absolute;
+    z-index: 10;
+    top: 0;
+    right: auto;
+    bottom: auto;
+    left: 0;
+    width: min(420px, calc(100vw - 32px));
+    max-height: calc(100vh - 32px);
+    margin: 0;
+}
+
+.ds-schrankerl-map-popup[open] {
+    animation: ds-schrankerl-map-popup-in 0.3s ease-out;
+}
+
+.ds-schrankerl-map-popup::backdrop {
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(4px);
+}
+
+.ds-schrankerl-map-popup[open]::backdrop {
+    animation: ds-schrankerl-map-fade-in 0.3s ease-out;
+}
+
+@keyframes ds-schrankerl-map-fade-in {
+    from {
+        opacity: 0;
+    }
+}
+
+@keyframes ds-schrankerl-map-popup-in {
+    from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.95);
+    }
+}
+
+.ds-schrankerl-map-popup__close,
+.ds-schrankerl-map-popup__arrow {
+    position: absolute;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: var(--color-ds-white, #fff);
+    box-shadow: 0 0 24px 0 rgba(0, 0, 0, 0.08);
+    color: var(--color-primary, #38624A);
+    cursor: pointer;
+    transition: color 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.ds-schrankerl-map-popup__close:hover,
+.ds-schrankerl-map-popup__arrow:hover {
+    color: var(--color-primary-hover, #1E3B2A);
+}
+
+.ds-schrankerl-map-popup__close:focus-visible,
+.ds-schrankerl-map-popup__arrow:focus-visible,
+.ds-schrankerl-map-popup__track:focus-visible,
+.ds-schrankerl-map-popup__button:focus-visible {
+    outline: 2px solid var(--color-primary, #38624A);
+    outline-offset: 2px;
+}
+
+.ds-schrankerl-map-popup__close {
+    top: 16px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+}
+
+.ds-schrankerl-map-popup__close svg {
+    width: 20px;
+    height: 20px;
+}
+
+.ds-schrankerl-map-popup__slider {
+    position: relative;
+}
+
+.ds-schrankerl-map-popup__track {
+    display: flex;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+}
+
+.ds-schrankerl-map-popup__track::-webkit-scrollbar {
+    display: none;
+}
+
+.ds-schrankerl-map-popup__slide {
+    flex: 0 0 100%;
+    aspect-ratio: 4 / 3;
+    scroll-snap-align: start;
+}
+
+.ds-schrankerl-map-popup__image {
+    display: block;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    margin: 0;
+    object-fit: cover;
+}
+
+.ds-schrankerl-map-popup__arrow {
+    top: 50%;
+    width: 48px;
+    height: 48px;
+    transform: translateY(-50%);
+}
+
+.ds-schrankerl-map-popup__arrow svg {
+    width: 20px;
+    height: 20px;
+}
+
+.ds-schrankerl-map-popup__arrow--prev {
+    left: 16px;
+}
+
+.ds-schrankerl-map-popup__arrow--next {
+    right: 16px;
+}
+
+/* At the first or last slide the matching arrow fades back, like the theme's slider navigation. */
+.ds-schrankerl-map-popup__arrow:disabled {
+    color: var(--color-primary, #38624A);
+    cursor: default;
+    opacity: 0.33;
+}
+
+.ds-schrankerl-map-popup__body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 32px 24px;
+    text-align: center;
+}
+
+/* Without images the body sits right below the close button. */
+.ds-schrankerl-map-popup__close + .ds-schrankerl-map-popup__body {
+    padding-top: 64px;
+}
+
+.ds-schrankerl-map-popup__title {
+    margin: 0;
+    color: var(--color-primary, #38624A);
+    font-family: var(--font-serif, 'p22-mackinac-pro', 'Times New Roman', serif);
+    font-size: 1.625rem;
+    font-weight: 700;
+    line-height: 30px;
+}
+
+.ds-schrankerl-map-popup__text {
+    font-size: 1rem;
+    line-height: 24px;
+}
+
+.ds-schrankerl-map-popup__text p {
+    margin: 0 0 16px;
+}
+
+.ds-schrankerl-map-popup__text p:last-child {
+    margin-bottom: 0;
+}
+
+.ds-schrankerl-map-popup__text strong,
+.ds-schrankerl-map-popup__text b {
+    font-weight: 600;
+}
+
+.ds-schrankerl-map-popup__text a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: rgba(56, 98, 74, 0.4);
+    text-underline-offset: 4px;
+    transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+.ds-schrankerl-map-popup__text a:hover {
+    color: var(--color-secondary, #CA4E13);
+    text-decoration-color: var(--color-secondary, #CA4E13);
+}
+
+.ds-schrankerl-map-popup__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 8px;
+    padding: 12px 24px;
+    border: 2px solid var(--color-secondary, #CA4E13);
+    border-radius: 999px;
+    background: var(--color-secondary, #CA4E13);
+    color: var(--color-tertiary, #FDF4EA);
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 18px;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+}
+
+.ds-schrankerl-map-popup__button:hover {
+    border-color: #AC3800;
+    background: #AC3800;
+    color: var(--color-tertiary, #FDF4EA);
+}
+
+@media (max-width: 767px) {
+    .ds-schrankerl-map-popup__slide {
+        aspect-ratio: 1 / 1;
+    }
+}
+
+.ds-schrankerl-map-popup:not(:modal) .ds-schrankerl-map-popup__close {
+    top: 12px;
+    right: 12px;
+}
+
+.ds-schrankerl-map-popup:not(:modal) .ds-schrankerl-map-popup__arrow {
+    width: 40px;
+    height: 40px;
+}
+
+.ds-schrankerl-map-popup:not(:modal) .ds-schrankerl-map-popup__arrow--prev {
+    left: 12px;
+}
+
+.ds-schrankerl-map-popup:not(:modal) .ds-schrankerl-map-popup__arrow--next {
+    right: 12px;
+}
+
+.ds-schrankerl-map-popup:not(:modal) .ds-schrankerl-map-popup__body {
+    gap: 12px;
+    padding: 24px 32px 32px;
+}
+
+.ds-schrankerl-map-popup:not(:modal) .ds-schrankerl-map-popup__close + .ds-schrankerl-map-popup__body {
+    padding-top: 56px;
+}
+
+.ds-schrankerl-map-popup:not(:modal) .ds-schrankerl-map-popup__text {
+    font-size: 0.9375rem;
+    line-height: 22px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ds-schrankerl-map .ds-schrankerl-map__marker {
+        transition: none;
+    }
+
+    .ds-schrankerl-map-popup[open],
+    .ds-schrankerl-map-popup[open]::backdrop {
+        animation: none;
+    }
+
+    .ds-schrankerl-map-popup__track {
+        scroll-behavior: auto;
+    }
+}

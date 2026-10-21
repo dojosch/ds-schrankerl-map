@@ -1,0 +1,346 @@
+.ds-schrankerl-map-admin [hidden] {
+    display: none !important;
+}
+
+.ds-schrankerl-map-admin__shortcode code {
+    user-select: all;
+}
+
+.ds-schrankerl-map-admin__image-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ds-schrankerl-map-admin__canvas {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+    border: 1px solid #ccd0d4;
+    background: #f0f0f1;
+    line-height: 0;
+    cursor: crosshair;
+    user-select: none;
+}
+
+.ds-schrankerl-map-admin__canvas > img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.ds-schrankerl-map-admin__marker {
+    position: absolute;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: 24px;
+    aspect-ratio: 1 / 1;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background: #2271b1;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+    overflow: hidden;
+    transform: translate(-50%, -50%);
+    cursor: grab;
+    touch-action: none;
+}
+
+/* Mirrors the frontend marker look. */
+.ds-schrankerl-map-admin__marker.has-logo {
+    border-color: #38624A;
+    background: #FDF4EA;
+    box-shadow: none;
+}
+
+.ds-schrankerl-map-admin__marker img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+}
+
+.ds-schrankerl-map-admin__marker.is-contain img {
+    object-fit: contain;
+}
+
+.ds-schrankerl-map-admin__marker.is-active {
+    z-index: 2;
+    outline: 3px solid #d63638;
+    outline-offset: 1px;
+}
+
+.ds-schrankerl-map-admin__marker.is-dragging {
+    cursor: grabbing;
+}
+
+/* Two cards per row, one when the meta box gets too narrow for that. */
+.ds-schrankerl-map-admin__editor {
+    container-type: inline-size;
+}
+
+.ds-schrankerl-map-admin__list {
+    margin: 12px 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+@container (max-width: 640px) {
+    .ds-schrankerl-map-admin__list {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.ds-schrankerl-map-admin__item {
+    margin: 0;
+    padding: 12px;
+    border: 1px solid #e2e4e7;
+    border-radius: 4px;
+    background: #f9f9f9;
+}
+
+.ds-schrankerl-map-admin__item.is-active {
+    border-color: #d63638;
+    box-shadow: 0 0 0 1px #d63638;
+}
+
+.ds-schrankerl-map-admin__item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e2e4e7;
+}
+
+.ds-schrankerl-map-admin__logo-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.ds-schrankerl-map-admin__logo-row .description {
+    margin: 0;
+    flex: 1;
+}
+
+.ds-schrankerl-map-admin__logo-preview {
+    width: 48px;
+    height: 48px;
+    box-sizing: border-box;
+    border: 2px solid #38624A;
+    border-radius: 50%;
+    background: #FDF4EA;
+    object-fit: cover;
+}
+
+.ds-schrankerl-map-admin__logo-preview.is-contain {
+    object-fit: contain;
+}
+
+.ds-schrankerl-map-admin__fields {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 8px;
+}
+
+.ds-schrankerl-map-admin__fields select {
+    justify-self: start;
+}
+
+.ds-schrankerl-map-admin__popup {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #e2e4e7;
+}
+
+.ds-schrankerl-map-admin__popup > .is-wide {
+    grid-column: 1 / -1;
+}
+
+.ds-schrankerl-map-admin__popup > .description {
+    margin: 0;
+}
+
+.ds-schrankerl-map-admin__popup > .button {
+    justify-self: start;
+}
+
+.ds-schrankerl-map-admin__gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ds-schrankerl-map-admin__gallery-item,
+.ds-schrankerl-map-admin__gallery-placeholder {
+    position: relative;
+    width: 56px;
+    height: 56px;
+    margin: 0;
+}
+
+.ds-schrankerl-map-admin__gallery-item {
+    cursor: move;
+}
+
+.ds-schrankerl-map-admin__gallery-item img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.ds-schrankerl-map-admin__gallery-placeholder {
+    box-sizing: border-box;
+    border: 1px dashed #8c8f94;
+    border-radius: 4px;
+}
+
+.ds-schrankerl-map-admin__gallery-remove {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background: #d63638;
+    color: #fff;
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.ds-schrankerl-map-admin__gallery-remove:focus-visible {
+    outline: 2px solid #2271b1;
+    outline-offset: 1px;
+}
+
+/* Link field, modelled on the ACF link UI. */
+.ds-schrankerl-map-admin__link-summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 8px;
+    min-width: 0;
+}
+
+.ds-schrankerl-map-admin__link-summary a {
+    overflow: hidden;
+    max-width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ds-schrankerl-map-admin__link-summary .dashicons {
+    color: #646970;
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+}
+
+.ds-schrankerl-map-admin__link-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 4px;
+}
+
+.ds-schrankerl-map-admin__link .description {
+    margin: 4px 0 0;
+}
+
+/* True/false switch, modelled on the ACF true_false UI. */
+.ds-schrankerl-map-admin__switch {
+    position: relative;
+    justify-self: start;
+    cursor: pointer;
+}
+
+.ds-schrankerl-map-admin__switch input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    opacity: 0;
+}
+
+.ds-schrankerl-map-admin__switch-track {
+    position: relative;
+    display: inline-flex;
+    box-sizing: border-box;
+    height: 30px;
+    border: 1px solid #7e8993;
+    border-radius: 5px;
+    background: #f5f5f5;
+    line-height: 20px;
+    transition: background 0.25s ease, border-color 0.25s ease;
+}
+
+.ds-schrankerl-map-admin__switch-track > span {
+    min-width: 15px;
+    padding: 4px 10px;
+    font-size: 13px;
+    text-align: center;
+}
+
+.ds-schrankerl-map-admin__switch-on {
+    color: #fff;
+}
+
+.ds-schrankerl-map-admin__switch-track::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    right: 50%;
+    bottom: 2px;
+    left: 2px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background: #fff;
+    transition: left 0.25s ease, right 0.25s ease, border-color 0.25s ease;
+}
+
+.ds-schrankerl-map-admin__switch input:checked + .ds-schrankerl-map-admin__switch-track {
+    border-color: #3582c4;
+    background: #0d99d5;
+}
+
+.ds-schrankerl-map-admin__switch input:checked + .ds-schrankerl-map-admin__switch-track::after {
+    right: 2px;
+    left: 50%;
+    border-color: #3582c4;
+}
+
+.ds-schrankerl-map-admin__switch input:focus-visible + .ds-schrankerl-map-admin__switch-track {
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px #2271b1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ds-schrankerl-map-admin__switch-track,
+    .ds-schrankerl-map-admin__switch-track::after {
+        transition: none;
+    }
+}
