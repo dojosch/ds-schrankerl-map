@@ -73,7 +73,7 @@
 
 /*
  * Popup: colors, fonts and controls follow the theme's popup, slider and button styles.
- * Mobile opens it as a modal over the page, desktop as a card floating over the map.
+ * It always opens as a modal over the page.
  */
 html:has(.ds-schrankerl-map-popup:modal),
 html:has(.ds-schrankerl-map-popup:modal) body {
@@ -107,19 +107,6 @@ html:has(.ds-schrankerl-map-popup:modal) body {
     max-width: 560px;
     max-height: calc(100% - 32px);
     margin: auto;
-}
-
-/* Placed next to its marker by the script, via top/left. */
-.ds-schrankerl-map-popup:not(:modal) {
-    position: absolute;
-    z-index: 10;
-    top: 0;
-    right: auto;
-    bottom: auto;
-    left: 0;
-    width: min(420px, calc(100vw - 32px));
-    max-height: calc(100vh - 32px);
-    margin: 0;
 }
 
 .ds-schrankerl-map-popup[open] {
@@ -333,38 +320,6 @@ html:has(.ds-schrankerl-map-popup:modal) body {
     .ds-schrankerl-map-popup__slide {
         aspect-ratio: 1 / 1;
     }
-}
-
-.ds-schrankerl-map-popup:not(:modal) .ds-schrankerl-map-popup__close {
-    top: 12px;
-    right: 12px;
-}
-
-.ds-schrankerl-map-popup:not(:modal) .ds-schrankerl-map-popup__arrow {
-    width: 40px;
-    height: 40px;
-}
-
-.ds-schrankerl-map-popup:not(:modal) .ds-schrankerl-map-popup__arrow--prev {
-    left: 12px;
-}
-
-.ds-schrankerl-map-popup:not(:modal) .ds-schrankerl-map-popup__arrow--next {
-    right: 12px;
-}
-
-.ds-schrankerl-map-popup:not(:modal) .ds-schrankerl-map-popup__body {
-    gap: 12px;
-    padding: 24px 32px 32px;
-}
-
-.ds-schrankerl-map-popup:not(:modal) .ds-schrankerl-map-popup__close + .ds-schrankerl-map-popup__body {
-    padding-top: 56px;
-}
-
-.ds-schrankerl-map-popup:not(:modal) .ds-schrankerl-map-popup__text {
-    font-size: 0.9375rem;
-    line-height: 22px;
 }
 
 @media (prefers-reduced-motion: reduce) {

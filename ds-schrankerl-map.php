@@ -297,7 +297,7 @@ class Plugin {
 
 		wp_enqueue_style( 'ds-schrankerl-map' );
 
-		// Collected separately so the dialogs follow all markers inside the map, which they're positioned against.
+		// Collected separately so the dialogs follow all markers inside the map.
 		$popups = '';
 
 		ob_start();
