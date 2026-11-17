@@ -1,0 +1,21 @@
+<wpml-config>
+	<custom-types>
+		<custom-type translate="1">ds_schrankerl_map</custom-type>
+	</custom-types>
+	<custom-fields>
+		<!-- Same map image in every language. -->
+		<custom-field action="copy">_ds_schrankerl_map_image_id</custom-field>
+		<!-- Only the popup texts below are translated; positions, sizes, logos and images are copied from the original. -->
+		<custom-field action="translate">_ds_schrankerl_map_markers</custom-field>
+	</custom-fields>
+	<custom-fields-texts>
+		<key name="_ds_schrankerl_map_markers">
+			<key name="*">
+				<key name="popup_title" label="Popup title" />
+				<key name="popup_text" label="Popup text" />
+				<key name="popup_button_text" label="Popup button text" />
+				<key name="popup_button_url" label="Popup button URL" />
+			</key>
+		</key>
+	</custom-fields-texts>
+</wpml-config>

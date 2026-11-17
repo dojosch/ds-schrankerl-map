@@ -271,7 +271,7 @@ class Plugin {
 
 	public function render_shortcode( $atts ) {
 		$atts    = shortcode_atts( [ 'id' => 0 ], $atts, self::SHORTCODE );
-		$post_id = absint( $atts['id'] );
+		$post_id = $this->get_translated_map_id( absint( $atts['id'] ) );
 
 		if ( ! $post_id || self::POST_TYPE !== get_post_type( $post_id ) || 'publish' !== get_post_status( $post_id ) ) {
 			return '';
@@ -435,6 +435,21 @@ class Plugin {
 		if ( 'ds_schrankerl_map_shortcode' === $column ) {
 			echo '<code>' . esc_html( $this->get_shortcode( $post_id ) ) . '</code>';
 		}
+	}
+
+	// With WPML, swaps the shortcode's map for its translation in the current language.
+	// Falls back to the given map when there is no published translation; without WPML the filter is a no-op.
+	private function get_translated_map_id( $post_id ) {
+		if ( ! $post_id ) {
+			return 0;
+		}
+
+		$translated_id = absint( apply_filters( 'wpml_object_id', $post_id, self::POST_TYPE, true ) );
+		if ( $translated_id && $translated_id !== $post_id && 'publish' === get_post_status( $translated_id ) ) {
+			return $translated_id;
+		}
+
+		return $post_id;
 	}
 
 	private function get_shortcode( $post_id ) {
