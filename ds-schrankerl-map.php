@@ -44,6 +44,7 @@ class Plugin {
 		add_action( 'save_post_' . self::POST_TYPE, [ $this, 'save_meta_box' ] );
 		add_action( 'wp_enqueue_scripts', [ $this, 'register_frontend_assets' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_assets' ] );
+		add_action( 'admin_init', [ $this, 'assign_missing_wpml_languages' ] );
 		add_filter( 'manage_' . self::POST_TYPE . '_posts_columns', [ $this, 'add_shortcode_column' ] );
 		add_action( 'manage_' . self::POST_TYPE . '_posts_custom_column', [ $this, 'render_shortcode_column' ], 10, 2 );
 	}
@@ -434,6 +435,40 @@ class Plugin {
 	public function render_shortcode_column( $column, $post_id ) {
 		if ( 'ds_schrankerl_map_shortcode' === $column ) {
 			echo '<code>' . esc_html( $this->get_shortcode( $post_id ) ) . '</code>';
+		}
+	}
+
+	// Maps created before WPML (or before this post type was translatable) have no language,
+	// so WPML hides them in the admin list. Assigns them the default language.
+	public function assign_missing_wpml_languages() {
+		global $wpdb;
+
+		$default_language = apply_filters( 'wpml_default_language', null );
+		if ( ! $default_language || ! apply_filters( 'wpml_is_translated_post_type', false, self::POST_TYPE ) ) {
+			return;
+		}
+
+		$element_type = 'post_' . self::POST_TYPE;
+		$post_ids     = $wpdb->get_col( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			$wpdb->prepare(
+				"SELECT p.ID FROM {$wpdb->posts} p
+				LEFT JOIN {$wpdb->prefix}icl_translations t ON t.element_id = p.ID AND t.element_type = %s
+				WHERE p.post_type = %s AND p.post_status NOT IN ('auto-draft', 'inherit') AND t.translation_id IS NULL",
+				$element_type,
+				self::POST_TYPE
+			)
+		);
+
+		foreach ( $post_ids as $post_id ) {
+			do_action(
+				'wpml_set_element_language_details',
+				[
+					'element_id'    => (int) $post_id,
+					'element_type'  => $element_type,
+					'trid'          => false,
+					'language_code' => $default_language,
+				]
+			);
 		}
 	}
 
